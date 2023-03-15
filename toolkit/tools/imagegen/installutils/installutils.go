@@ -363,6 +363,25 @@ func PackageNamesFromConfig(config configuration.Config) (packageList []*pkgjson
 	return
 }
 
+// orderPackageInstallList updates the order we will install packages if needed. Since tdnf can't install a full system's worth
+// of packages without running out of room we need to install one at a time. This can cause issues with ordering since we aren't
+// doing a single transaction. Fixup any ordering issues here (ie, make sure initramfs is always last)
+func orderPackageInstallList(packageList []string) []string {
+	initramfsPackages := []string{}
+	orderedPackageList := []string{}
+
+	for _, pkg := range packageList {
+		// search for initramfs, ignroing any version info at the end of the package name
+		if strings.HasPrefix(pkg, "initramfs") {
+			initramfsPackages = append(initramfsPackages, pkg)
+		} else {
+			orderedPackageList = append(orderedPackageList, pkg)
+		}
+	}
+	orderedPackageList = append(orderedPackageList, initramfsPackages...)
+	return orderedPackageList
+}
+
 // PopulateInstallRoot fills the installroot with packages and configures the image for boot
 // - installChroot is a pointer to the install Chroot object
 // - packagesToInstall is a slice of packages to install
@@ -406,6 +425,9 @@ func PopulateInstallRoot(installChroot *safechroot.Chroot, packagesToInstall []s
 			}
 		}()
 	}
+
+	// Change the ordering if needed (ie make sure initramfs is last)
+	packagesToInstall = orderPackageInstallList(packagesToInstall)
 
 	// Calculate how many packages need to be installed so an accurate percent complete can be reported
 	totalPackages, err := calculateTotalPackages(packagesToInstall, installRoot)
