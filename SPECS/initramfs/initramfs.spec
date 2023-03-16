@@ -1,7 +1,7 @@
 Summary:        initramfs
 Name:           initramfs
 Version:        2.0
-Release:        10%{?dist}
+Release:        11%{?dist}
 License:        Apache License
 Vendor:         Microsoft Corporation
 Distribution:   Mariner
@@ -136,6 +136,9 @@ echo "initramfs" %{version}-%{release} "postun" >&2
 %dir %{_localstatedir}/lib/initramfs/kernel
 
 %changelog
+* Tue Mar 14 2023 Daniel McIlvaney <damcilva@microsoft.com> - 2.0-11
+- initrd may need to pull in mdadm raid management tools for mdraid roots, rebuild if we add the tools
+
 * Thu Mar 02 2023 Cameron Baird <cameronbaird@microsoft.com> - 2.0-10
 - Create initrd in /boot/efi for kernel-mshv only if it is a kata image
 
