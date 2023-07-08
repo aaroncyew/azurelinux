@@ -476,7 +476,7 @@
         "other": {
           "name": "apache-parent",
           "version": "21",
-          "downloadUrl": "http://repo1.maven.org/maven2/org/apache/apache/21/apache-21-source-release.zip"
+          "downloadUrl": "https://repo1.maven.org/maven2/org/apache/apache/21/apache-21-source-release.zip"
         }
       }
     },
@@ -576,7 +576,7 @@
         "other": {
           "name": "arpwatch",
           "version": "2.1a15",
-          "downloadUrl": "ftp://ftp.ee.lbl.gov/arpwatch-2.1a15.tar.gz"
+          "downloadUrl": "https://ee.lbl.gov/downloads/arpwatch/arpwatch-2.1a15.tar.gz"
         }
       }
     },
@@ -606,7 +606,7 @@
         "other": {
           "name": "aspell",
           "version": "0.60.8",
-          "downloadUrl": "ftp://ftp.gnu.org/gnu/aspell/aspell-0.60.8.tar.gz"
+          "downloadUrl": "https://ftp.gnu.org/gnu/aspell/aspell-0.60.8.tar.gz"
         }
       }
     },
@@ -616,7 +616,7 @@
         "other": {
           "name": "aspell-en",
           "version": "2019.10.06",
-          "downloadUrl": "ftp://ftp.gnu.org/gnu/aspell/dict/en/aspell6-en-2019.10.06-0.tar.bz2"
+          "downloadUrl": "https://ftp.gnu.org/gnu/aspell/dict/en/aspell6-en-2019.10.06-0.tar.bz2"
         }
       }
     },
@@ -2589,7 +2589,7 @@
         "other": {
           "name": "dhcp",
           "version": "4.4.2",
-          "downloadUrl": "ftp://ftp.isc.org/isc/dhcp/4.4.2/dhcp-4.4.2.tar.gz"
+          "downloadUrl": "https://ftp.ripe.net/mirrors/sites/ftp.isc.org/isc/dhcp/4.4.2/dhcp-4.4.2.tar.gz"
         }
       }
     },
@@ -2599,7 +2599,7 @@
         "other": {
           "name": "dialog",
           "version": "1.3",
-          "downloadUrl": "ftp://ftp.invisible-island.net/dialog/dialog-1.3-20180621.tgz"
+          "downloadUrl": "https://invisible-mirror.net/archives/dialog/dialog-1.3-20180621.tgz"
         }
       }
     },
@@ -2619,7 +2619,7 @@
         "other": {
           "name": "diffstat",
           "version": "1.63",
-          "downloadUrl": "ftp://ftp.invisible-island.net/pub/diffstat/diffstat-1.63.tgz"
+          "downloadUrl": "https://invisible-mirror.net/archives/diffstat/diffstat-1.63.tgz"
         }
       }
     },
@@ -2809,7 +2809,7 @@
         "other": {
           "name": "docbook-utils",
           "version": "0.6.14",
-          "downloadUrl": "ftp://sources.redhat.com/pub/docbook-tools/new-trials/SOURCES/docbook-utils-0.6.14.tar.gz"
+          "downloadUrl": "https://sourceware.org/ftp/docbook-tools/new-trials/SOURCES/docbook-utils-0.6.14.tar.gz"
         }
       }
     },
@@ -2959,7 +2959,7 @@
         "other": {
           "name": "driverctl",
           "version": "0.111",
-          "downloadUrl": "https://gitlab.com/driverctl/driverctl/repository/archive.tar.gz?ref=0.111"
+          "downloadUrl": "https://gitlab.com/driverctl/driverctl/-/archive/0.111/driverctl-0.111.tar.gz"
         }
       }
     },
@@ -10122,7 +10122,7 @@
         "other": {
           "name": "libmwaw",
           "version": "0.3.17",
-          "downloadUrl": "http://downloads.sourceforge.net/libmwaw/libmwaw-0.3.17.tar.xz"
+          "downloadUrl": "https://downloads.sourceforge.net/libmwaw/libmwaw-0.3.17.tar.xz"
         }
       }
     },
@@ -10492,7 +10492,7 @@
         "other": {
           "name": "libpinyin",
           "version": "2.3.0",
-          "downloadUrl": "http://downloads.sourceforge.net/libpinyin/libpinyin/libpinyin-2.3.0.tar.gz"
+          "downloadUrl": "https://github.com/libpinyin/libpinyin/releases/download/2.3.0/libpinyin-2.3.0.tar.gz"
         }
       }
     },
@@ -12822,7 +12822,7 @@
         "other": {
           "name": "maven-parent",
           "version": "27",
-          "downloadUrl": "http://repo1.maven.org/maven2/org/apache/maven/maven-parent/27/maven-parent-27-source-release.zip"
+          "downloadUrl": "https://repo1.maven.org/maven2/org/apache/maven/maven-parent/27/maven-parent-27-source-release.zip"
         }
       }
     },
@@ -15735,7 +15735,7 @@
         "other": {
           "name": "pcp",
           "version": "5.1.1",
-          "downloadUrl": "https://bintray.com/artifact/download/pcp/source/pcp-5.1.1.src.tar.gz"
+          "downloadUrl": "https://github.com/performancecopilot/pcp/archive/refs/tags/5.1.1.tar.gz"
         }
       }
     },
