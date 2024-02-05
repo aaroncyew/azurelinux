@@ -12,21 +12,19 @@ data types and data structures and their HDF5 equivalents vastly\
 simplifies the process of reading and writing data from Python.
 Summary:        A Python interface to the HDF5 library
 Name:           h5py
-Version:        3.7.0
-Release:        4%{?dist}
+Version:        3.10.0
+Release:        1%{?dist}
 License:        BSD
 Vendor:         Microsoft Corporation
 Distribution:   Mariner
 URL:            https://www.h5py.org/
 Source0:        https://files.pythonhosted.org/packages/source/h/h5py/h5py-%{version}.tar.gz
-# drop the unnecessary workaround for float128 type after
-# https://fedoraproject.org/wiki/Changes/PPC64LE_Float128_Transition
-# in F-36
-Patch0:         h5py-3.7.0-ppc-float128.patch
+Patch0:         h5py-3.10.0-fix.patch
 BuildRequires:  gcc
 BuildRequires:  hdf5-devel
 BuildRequires:  liblzf-devel
-BuildRequires:  python%{python3_pkgversion}-Cython >= 0.23
+BuildRequires:  python%{python3_pkgversion}-Cython >= 0.23 
+# "Cython >=0.29.31,<4",
 BuildRequires:  python%{python3_pkgversion}-cached_property
 BuildRequires:  python%{python3_pkgversion}-devel >= 3.2
 BuildRequires:  python%{python3_pkgversion}-numpy >= 1.7
@@ -49,8 +47,8 @@ Requires:       python%{python3_pkgversion}-six
 %description -n python%{python3_pkgversion}-h5py %{_description}
 
 %prep
-%setup -q -c -n %{name}-%{version}
-%patch0
+%setup -p1 -q -c -n %{name}-%{version}
+# %patch0
 mv %{name}-%{version} serial
 cd serial
 %{__python3} api_gen.py
@@ -92,6 +90,9 @@ cd -
 %{python3_sitearch}/%{name}-%{version}-*.egg-info
 
 %changelog
+* Fri Feb 02 2024 CBL-Mariner Servicing Account <cblmargh@microsoft.com> - 3.10.0-1
+- Auto-upgrade to 3.10.0 - Mariner 3.0 release
+
 * Tue Nov 01 2022 Riken Maharjan <rmaharjan@microsoft.com> - 3.7.0-4
 - License verified
 - Initial CBL-Mariner import from Fedora 37 (license: MIT).
