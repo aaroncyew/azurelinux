@@ -9,8 +9,8 @@
 
 Summary:        Domain Name System software
 Name:           bind
-Version:        9.16.44
-Release:        2%{?dist}
+Version:        9.19.21
+Release:        1%{?dist}
 License:        ISC
 Vendor:         Microsoft Corporation
 Distribution:   Azure Linux
@@ -31,8 +31,6 @@ Source12:       generate-rndc-key.sh
 Source13:       named.rwtab
 Source14:       setup-named-softhsm.sh
 Source15:       named-chroot.files
-Patch9:         bind-9.14-config-pkcs11.patch
-Patch10:        bind-9.10-dist-native-pkcs11.patch
 
 BuildRequires:  gcc
 BuildRequires:  json-c-devel
@@ -228,12 +226,10 @@ Summary:        BIND utilities
 %prep
 %setup -q
 
-%patch 9 -p1 -b .config-pkcs11
 cp -r bin/named{,-pkcs11}
 cp -r bin/dnssec{,-pkcs11}
 cp -r lib/dns{,-pkcs11}
 cp -r lib/ns{,-pkcs11}
-%patch 10 -p1 -b .dist_pkcs11
 
 libtoolize -c -f; aclocal -I libtool.m4 --force; autoconf -f
 
@@ -617,6 +613,9 @@ fi;
 %{_mandir}/man8/named-nzd2nzf.8*
 
 %changelog
+* Tue Feb 20 2024 CBL-Mariner Servicing Account <cblmargh@microsoft.com> - 9.19.21-1
+- Auto-upgrade to 9.19.21 - Mariner 3.0 package upgrade
+
 * Thu Dec 14 2023 Neha Agarwal <nehaagarwal@microsoft.com> - 9.16.44-2
 - Fix resetting of passwd and group on package update
 
