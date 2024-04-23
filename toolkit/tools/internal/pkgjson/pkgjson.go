@@ -110,7 +110,7 @@ func (pkgVer *PackageVer) Interval() (interval PackageVerInterval, err error) {
 	v2 := versioncompare.New(pkgVer.SVersion)
 
 	if err = pkgVer.validatedIntervals(); err != nil {
-		err = fmt.Errorf("invalid intervals for '%s': %v", pkgVer.Name, err)
+		err = fmt.Errorf("invalid intervals for (%s): %v", pkgVer.Name, err)
 		return
 	}
 

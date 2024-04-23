@@ -582,7 +582,7 @@ func parseRichDependency(richDependency string) (versions []*pkgjson.PackageVer,
 	// All single condition strings are surrounded by spaces to match full words.
 	for _, singleCondition := range unsupportedBooleanConditions {
 		if strings.Contains(richDependency, singleCondition) {
-			err = fmt.Errorf("found unsupported boolean condition '%s' inside '%s'. %s", singleCondition, richDependency, documentationHint)
+			err = fmt.Errorf("found unsupported boolean condition (%s) inside (%s). %s", singleCondition, richDependency, documentationHint)
 			return
 		}
 	}
@@ -593,7 +593,7 @@ func parseRichDependency(richDependency string) (versions []*pkgjson.PackageVer,
 		conditionsCount += strings.Count(richDependency, singleCondition)
 	}
 	if conditionsCount > 1 {
-		err = fmt.Errorf("found more than one boolean condition inside '%s'. %s", richDependency, documentationHint)
+		err = fmt.Errorf("found more than one boolean condition inside (%s). %s", richDependency, documentationHint)
 		return
 	}
 
@@ -615,12 +615,12 @@ func parseRichDependency(richDependency string) (versions []*pkgjson.PackageVer,
 
 	switch {
 	case strings.Contains(richDependency, andCondition) || strings.Contains(richDependency, orCondition) || strings.Contains(richDependency, withCondition):
-		logger.Log.Warnf("Found a boolean condition '%s', make sure both packages are available. %s.", richDependency, documentationHint)
+		logger.Log.Warnf("Found a boolean condition (%s), make sure both packages are available. %s", richDependency, documentationHint)
 	case strings.Contains(richDependency, ifCondition):
-		logger.Log.Warnf("Found a boolean condition '%s', make sure the packages on the left is available. %s.", richDependency, documentationHint)
+		logger.Log.Warnf("Found a boolean condition (%s), make sure the packages on the left is available. %s", richDependency, documentationHint)
 		packageStrings = []string{packageStrings[0]}
 	default:
-		err = fmt.Errorf("found a unsupported boolean condition inside '%s'. %s", richDependency, documentationHint)
+		err = fmt.Errorf("found a unsupported boolean condition inside (%s). %s", richDependency, documentationHint)
 		return
 	}
 
@@ -677,7 +677,7 @@ func convertToToolchainRpmPath(currentRpmPath, arch, toolchainDir string) (toolc
 	rpmFileName := filepath.Base(currentRpmPath)
 	toolchainPath = filepath.Join(toolchainDir, arch)
 	toolchainPath = filepath.Join(toolchainPath, rpmFileName)
-	logger.Log.Debugf("Toolchain changing '%s' to '%s'.", currentRpmPath, toolchainPath)
+	logger.Log.Debugf("Toolchain changing (%s) to (%s)", currentRpmPath, toolchainPath)
 	return toolchainPath
 }
 
