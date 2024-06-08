@@ -685,7 +685,7 @@ func getSELinuxModeFromLinuxArgs(args []grubConfigLinuxArg) (imagecustomizerapi.
 }
 
 // Gets the SELinux mode set by the /etc/selinux/config file.
-func getSELinuxModeFromConfigFile(imageChroot *safechroot.Chroot) (imagecustomizerapi.SELinuxMode, error) {
+func getSELinuxModeFromConfigFile(imageChroot safechroot.ChrootInterface) (imagecustomizerapi.SELinuxMode, error) {
 	selinuxConfigFilePath := filepath.Join(imageChroot.RootDir(), installutils.SELinuxConfigFile)
 
 	// Read the SELinux config file.
@@ -720,7 +720,7 @@ func getSELinuxModeFromConfigFile(imageChroot *safechroot.Chroot) (imagecustomiz
 }
 
 // Reads the /boot/grub2/grub.cfg file.
-func readGrub2ConfigFile(imageChroot *safechroot.Chroot) (string, error) {
+func readGrub2ConfigFile(imageChroot safechroot.ChrootInterface) (string, error) {
 	logger.Log.Debugf("Reading grub.cfg file")
 
 	grub2ConfigFilePath := getGrub2ConfigFilePath(imageChroot)
@@ -735,7 +735,7 @@ func readGrub2ConfigFile(imageChroot *safechroot.Chroot) (string, error) {
 }
 
 // Writes the /boot/grub2/grub.cfg file.
-func writeGrub2ConfigFile(grub2Config string, imageChroot *safechroot.Chroot) error {
+func writeGrub2ConfigFile(grub2Config string, imageChroot safechroot.ChrootInterface) error {
 	logger.Log.Debugf("Writing grub.cfg file")
 
 	grub2ConfigFilePath := getGrub2ConfigFilePath(imageChroot)
@@ -749,7 +749,7 @@ func writeGrub2ConfigFile(grub2Config string, imageChroot *safechroot.Chroot) er
 	return nil
 }
 
-func getGrub2ConfigFilePath(imageChroot *safechroot.Chroot) string {
+func getGrub2ConfigFilePath(imageChroot safechroot.ChrootInterface) string {
 	return filepath.Join(imageChroot.RootDir(), installutils.GrubCfgFile)
 }
 
