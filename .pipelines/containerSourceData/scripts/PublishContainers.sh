@@ -196,19 +196,32 @@ function create_multi_arch_tags {
     echo "+++ $full_multiarch_tag tag pushed successfully"
     oras_attach "$full_multiarch_tag"
 
+    write_output "$original_container" "$multiarch_name" "$architecture_build"
+}
+
+function write_output {
+    # $1: original container (without '-amd64' or '-arm64' extension in tag)
+    # $2: multi-arch name
+    local original_container=$1
+    local multiarch_name=$2
+    local architecture_build=$3
+
     # Save the multi-arch tag to a file.
     image_basename=${multiarch_name#*/}
     dash_removed_name=${image_basename//-/}
     final_name=${dash_removed_name////_}
 
     output_file="$CONTAINER_TAGS_DIR/$FILE_NAME_PREFIX-$final_name$FILE_EXT"
-    echo "Save the multi-arch tag to a file: $output_file"
+    echo "Save the container tags to a file: $output_file"
 
-    echo "$original_container-amd64" >> "$output_file"
-    if [[ $architecture_build == *"ARM64"*  ]]; then
-        echo "$original_container-arm64" >> "$output_file"
+    # NVIDIA driver container does not need tag other than full_multiarch_tag
+    if [ -z "$IS_NVIDIA_GOLDEN_IMAGE" ]; then
+        echo "$original_container-amd64" >> "$output_file"
+        if [[ $architecture_build == *"ARM64"*  ]]; then
+            echo "$original_container-arm64" >> "$output_file"
+        fi
     fi
-    echo "$full_multiarch_tag" >> "$output_file"
+    echo "$original_container" >> "$output_file"
 }
 
 for PUBLISHED_CONTAINER_FILE in $PUBLISHED_CONTAINER_FILES
@@ -234,6 +247,7 @@ do
     IS_CORE_IMAGE=$(jq -r '.data_is_core_image' "$TEMP_FILE")
     IS_GOLDEN_IMAGE=$(jq -r '.data_is_golden_image' "$TEMP_FILE")
     IS_HCI_GOLDEN_IMAGE=$(jq -r '.data_is_hci_golden_image' "$TEMP_FILE")
+    IS_NVIDIA_GOLDEN_IMAGE=$(jq -r '.data_is_nvidia_golden_image' "$TEMP_FILE")
     ARCHITECTURE_TO_BUILD=$(jq -r '.data_architecture_to_build' "$TEMP_FILE")
     TARGET_ACR=$(jq -r '.data_target_acr' "$TEMP_FILE")
 
@@ -245,12 +259,13 @@ do
     # Remove the temp file.
     [ -f "$TEMP_FILE" ] && rm "$TEMP_FILE"
 
-    echo "Container Type        -> $container_type"
-    echo "IS_CORE_IMAGE         -> $IS_CORE_IMAGE"
-    echo "IS_GOLDEN_IMAGE       -> $IS_GOLDEN_IMAGE"
-    echo "IS_HCI_GOLDEN_IMAGE   -> $IS_HCI_GOLDEN_IMAGE"
-    echo "ARCHITECTURE_TO_BUILD -> $ARCHITECTURE_TO_BUILD"
-    echo "TARGET_ACR            -> $TARGET_ACR"
+    echo "Container Type            -> $container_type"
+    echo "IS_CORE_IMAGE             -> $IS_CORE_IMAGE"
+    echo "IS_GOLDEN_IMAGE           -> $IS_GOLDEN_IMAGE"
+    echo "IS_HCI_GOLDEN_IMAGE       -> $IS_HCI_GOLDEN_IMAGE"
+    echo "IS_NVIDIA_GOLDEN_IMAGE    -> $IS_NVIDIA_GOLDEN_IMAGE"
+    echo "ARCHITECTURE_TO_BUILD     -> $ARCHITECTURE_TO_BUILD"
+    echo "TARGET_ACR                -> $TARGET_ACR"
 
     while IFS= read -r image_name
     do
@@ -262,7 +277,11 @@ do
         container_registry="${image_name%%.*}"
         acr_login "$container_registry"
 
-        amd64_image=${image_name%-*}-amd64
+        if "$IS_NVIDIA_GOLDEN_IMAGE"; then
+            amd64_image=$image_name
+        else
+            amd64_image=${image_name%-*}-amd64
+        fi
         docker pull "$amd64_image"
 
         # Some container images are only built for AMD64 architecture.
@@ -300,7 +319,11 @@ do
         # e.g.: azurelinuxpreview.azurecr.io/base/core:1.0.20210628-amd64
         # container name is [registry name].azurecr.io/[name]
         # container tag is tag (without -[amd64 or arm64])
-        image_name_with_noarch=${image_name%-*}
+        if "$IS_NVIDIA_GOLDEN_IMAGE"; then
+            image_name_with_noarch=$image_name
+        else
+            image_name_with_noarch=${image_name%-*}
+        fi
         container_name=${image_name_with_noarch%:*}
         container_tag=${image_name_with_noarch#*:}
 
@@ -337,6 +360,18 @@ do
                 "$azure_linux_version" \
                 "$ARCHITECTURE_TO_BUILD"
         elif "$IS_GOLDEN_IMAGE"; then
+            # NVIDIA driver container image is built on AMD64 and thus no need to create multi-arch tag
+            # The tag for NVIDIA driver container image has to be on a specific format so as to be recognized
+            # by NVIDIA GPU operator
+            if "$IS_NVIDIA_GOLDEN_IMAGE"; then
+                write_output \
+                    "$image_name_with_noarch" \
+                    "$container_name" \
+                    "$ARCHITECTURE_TO_BUILD"
+                
+                continue
+            fi
+
             # For golden images, we need to create multi-arch tags for
             # the major version, the major and minor version, and the full version.
             echo "Create multi-arch tags for golden image: $container_type"
