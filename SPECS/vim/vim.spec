@@ -2,7 +2,7 @@
 Summary:        Text editor
 Name:           vim
 Version:        9.0.2121
-Release:        2%{?dist}
+Release:        3%{?dist}
 License:        Vim
 Vendor:         Microsoft Corporation
 Distribution:   Mariner
@@ -197,6 +197,9 @@ fi
 %{_bindir}/vimdiff
 
 %changelog
+* Thu Jun 20 2024 CBL-Mariner Servicing Account <cblmargh@microsoft.com> - 9.0.2121-3
+- TEST - DO NOT MERGE
+
 * Tue Feb 20 2024 Suresh Thelkar <sthelkar@microsoft.com> - 9.0.2121-2
 - Patch CVE-2024-22667
 
