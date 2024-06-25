@@ -2204,7 +2204,6 @@
                 "cf-cli",
                 "check-restart",
                 "clamav",
-                "cloud-hypervisor",
                 "cloud-hypervisor-cvm",
                 "cmake-fedora",
                 "containerd",
