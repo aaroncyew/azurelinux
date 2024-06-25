@@ -102,7 +102,7 @@
 Summary:        Extended crypt library for descrypt, md5crypt, bcrypt, and others
 Name:           libxcrypt
 Version:        4.4.36
-Release:        1%{?dist}
+Release:        2%{?dist}
 # For explicit license breakdown, see the
 # LICENSING file in the source tarball.
 License:        LGPLv2+ AND BSD AND Public Domain
@@ -142,12 +142,7 @@ Provides:       %{name}-common = %{version}-%{release}
 Obsoletes:      %{name}-compat < %{version}-%{release}
 %endif
 # We need a version of glibc, that doesn't build libcrypt anymore.
-#Requires:       glibc%{?_isa}         >= %{glibc_minver}
-%if %{with override_glibc}
-# Require a specific glibc version so the post macro is compatible.
-BuildRequires:  glibc-devel = %{glibcversion}
-Requires:       glibc = %{glibcversion}
-%endif
+Requires:       glibc%{?_isa}         >= %{glibc_minver}
 %if 0%{?fedora} >= 30
 Recommends:     mkpasswd
 %endif
@@ -325,10 +320,6 @@ install -Dpm 0644 -t %{buildroot}%{_pkgdocdir} \
 # Drop README.md as it is identical to README.
 rm -f %{buildroot}%{_pkgdocdir}/README.md
 
-%if %{with override_glibc}
-mv %{buildroot}/%{_libdir}/libcrypt.so.%{sov} %{buildroot}/%{_libdir}/libxcrypt.so.%{sov}
-%endif
-
 
 %check
 build_dirs="%{_vpath_builddir}"
@@ -346,24 +337,8 @@ for dir in ${build_dirs}; do
     }
 done
 
-%if %{with override_glibc}
-# This posttrans section is a stopgap to allow installing
-# libxcrypt on a system that already has libcrypt from glibc.
-# In a future release these will be removed and libxcrypt will be default.
-%posttrans
-rm %{_libdir}/libcrypt.so.1
-ln -s %{_libdir}/libxcrypt.so.%{sov} %{_libdir}/libcrypt.so.1
-%endif
-
 %post -p /sbin/ldconfig
-
-%postun
-# See above comments about the %%posttrans section
-%if %{with override_glibc}
-rm %{_libdir}/libcrypt.so.1
-ln -s %{_libdir}/libcrypt-%{glibcversion}.so %{_libdir}/libcrypt.so.1
-%endif
-/sbin/ldconfig
+%postun -p /sbin/ldconfig
 
 %if %{with compat_pkg}
 %post -n compat -p /sbin/ldconfig
@@ -387,13 +362,8 @@ ln -s %{_libdir}/libcrypt-%{glibcversion}.so %{_libdir}/libcrypt.so.1
 #%{_fipsdir}/libcrypt.so.%{soc}.hmac
 #%{_fipsdir}/libcrypt.so.%{sov}.hmac
 
-%if %{with override_glibc}
-%exclude %{_libdir}/libcrypt.so.%{soc}
-%{_libdir}/libxcrypt.so.%{sov}
-%else
 %{_libdir}/libcrypt.so.%{soc}
 %{_libdir}/libcrypt.so.%{sov}
-%endif
 
 %{_mandir}/man5/crypt.5*
 
@@ -413,16 +383,11 @@ ln -s %{_libdir}/libcrypt-%{glibcversion}.so %{_libdir}/libcrypt.so.1
 %files devel
 %doc %{_pkgdocdir}/ChangeLog
 %doc %{_pkgdocdir}/TODO
-%if %{with override_glibc}
-%exclude %{_libdir}/libcrypt.so
-%exclude %{_includedir}/crypt.h
-%else
 %{_libdir}/libcrypt.so
-%{_includedir}/crypt.h
-%endif
 %if %{without new_api}
 %{_libdir}/libxcrypt.so
 %endif
+%{_includedir}/crypt.h
 %if %{without new_api}
 %{_includedir}/xcrypt.h
 %endif
@@ -437,6 +402,7 @@ ln -s %{_libdir}/libcrypt-%{glibcversion}.so %{_libdir}/libcrypt.so.1
 %{_mandir}/man3/crypt_gensalt_ra.3*
 %{_mandir}/man3/crypt_gensalt_rn.3*
 %{_mandir}/man3/crypt_preferred_method.3*
+
 
 %if %{with staticlib}
 %files static
@@ -454,6 +420,9 @@ ln -s %{_libdir}/libcrypt-%{glibcversion}.so %{_libdir}/libcrypt.so.1
 
 
 %changelog
+* Tue Jun 04 2024 Chris Co <chrco@microsoft.com> - 4.4.36-2
+- Remove override_glibc logic so libxcrypt can supply libcrypt correctly to glibc
+
 * Mon Nov 27 2023 Andrew Phelps <anphel@microsoft.com> - 4.4.36-1
 - Upgrade to version 4.4.36
 
